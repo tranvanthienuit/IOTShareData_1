@@ -20,9 +20,12 @@ public class Type_2 {
                         "M10521-1\n" +
                         "M10528-0\n";
         List<String> dataTrain = new ArrayList<>(Arrays.asList(input.split("\n")));
-        System.out.println("Input Item's Name: ");
         Scanner scanner = new Scanner(System.in);
-        String itemName = scanner.next();
+
+        String itemName = dataTrain.get(0).substring(0, dataTrain.get(0).lastIndexOf("-"));
+        System.out.println("Item's Name: " + itemName);
+
+
         System.out.println("Input number Character: ");
         int numberCha = scanner.nextInt();
 

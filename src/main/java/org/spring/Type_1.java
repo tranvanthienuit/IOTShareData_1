@@ -3,21 +3,33 @@ package org.spring;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class Type_1 {
     public static void main(String[] args) {
         String input =
-                "D15006.0\n" +
-                        "D15006.1\n" +
-                        "D15007.0\n" +
-                        "D15007.1\n" +
-                        "D15008.0\n" +
-                        "D15008.1\n";
+                "E4010.0\n" +
+                        "E4010.1\n" +
+                        "E4010.2\n" +
+                        "E4010.3\n" +
+                        "E4010.4\n" +
+                        "E4010.5\n" +
+                        "E4010.6\n" +
+                        "E4010.7\n" +
+                        "E4011.0\n" +
+                        "E4011.1\n" +
+                        "E4011.2\n" +
+                        "E4011.3\n" +
+                        "E4011.4\n" +
+                        "E4011.5\n" +
+                        "E4011.6\n" +
+                        "E4011.7\n" +
+                        "E4012.0\n" +
+                        "E4012.1\n" +
+                        "E4012.2\n";
         List<String> dataTrain = new ArrayList<>(Arrays.asList(input.split("\n")));
-        System.out.println("Input Item's Name: ");
-        Scanner scanner = new Scanner(System.in);
-        String itemName = scanner.next();
+
+        String itemName = dataTrain.get(0).substring(0, dataTrain.get(0).lastIndexOf("."));
+        System.out.println("Item's Name: " + itemName);
 
         int offset = 0;
 
