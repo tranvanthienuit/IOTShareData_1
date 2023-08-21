@@ -29,6 +29,9 @@ public class Type_2 {
         System.out.println("Input number Character: ");
         int numberCha = scanner.nextInt();
 
+        System.out.println("Data Type (UI1: 17; UI2: 18)");
+        int dataType = scanner.nextInt();
+
         int parentAddress = Integer.parseInt(itemName.substring(numberCha));
 
         int offset = 0;
@@ -41,7 +44,7 @@ public class Type_2 {
 
             int bit = Integer.parseInt(dataTrain.get(i).substring(dataTrain.get(i).length() - 1));
 
-            System.out.println("WordItem" + itemName + "|" + item + "-" + bit + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + item + "," + offset + ",17,1,1,1,False,0,0,True," + bit + ",0,0,0,False,2\n");
+            System.out.println("WordItem" + itemName + "|" + item + "-" + bit + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + item + "," + offset + "," + dataType + ",1,1,1,False,0,0,True," + bit + ",0,0,0,False,2\n");
 
             if (i + 1 < dataTrain.size()) {
                 int nextBit = Integer.parseInt(dataTrain.get(i + 1).substring(dataTrain.get(i + 1).lastIndexOf("-") + 1));
