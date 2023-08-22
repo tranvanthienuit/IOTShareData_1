@@ -22,12 +22,8 @@ public class Type_2 {
         List<String> dataTrain = new ArrayList<>(Arrays.asList(input.split("\n")));
         Scanner scanner = new Scanner(System.in);
 
-        String itemName = dataTrain.get(0).substring(0, dataTrain.get(0).lastIndexOf("-"));
-        System.out.println("Item's Name: " + itemName);
-
-
-        System.out.println("Input number Character: ");
-        int numberCha = scanner.nextInt();
+        String parentItem = dataTrain.get(0).substring(0, dataTrain.get(0).lastIndexOf("-"));
+        System.out.println("Item's Name: " + parentItem);
 
         System.out.println("Data Type (UI1: 17; UI2: 18)");
         int dataType = scanner.nextInt();
@@ -38,11 +34,11 @@ public class Type_2 {
 
         for (int i = 0; i < dataTrain.size(); i++) {
 
-            String item = dataTrain.get(i).substring(0,dataTrain.get(i).lastIndexOf("-"));
+            String itemAddress = dataTrain.get(i).substring(0, dataTrain.get(i).lastIndexOf("-"));
 
-            int bit = Integer.parseInt(dataTrain.get(i).substring(dataTrain.get(i).length() - 1));
+            int bit = Integer.parseInt(dataTrain.get(i).substring(dataTrain.get(i).lastIndexOf("-") + 1));
 
-            System.out.println("WordItem" + itemName + "|" + item + "-" + bit + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + item + "," + offset + "," + dataType + ",1,1,1,False,0,0,True," + bit + ",0,0,0,False,2\n");
+            System.out.println("WordItem" + parentItem + "|" + itemAddress + "-" + bit + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + itemAddress + "," + offset + "," + dataType + ",1,1,1,False,0,0,True," + bit + ",0,0,0,False,2\n");
 
             if (i + 1 < dataTrain.size()) {
                 int nextBit = Integer.parseInt(dataTrain.get(i + 1).substring(dataTrain.get(i + 1).lastIndexOf("-") + 1));

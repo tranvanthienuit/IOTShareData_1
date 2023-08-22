@@ -29,8 +29,8 @@ public class Type_1 {
                         "E4012.2\n";
         List<String> dataTrain = new ArrayList<>(Arrays.asList(input.split("\n")));
 
-        String itemName = dataTrain.get(0).substring(0, dataTrain.get(0).lastIndexOf("."));
-        System.out.println("Item's Name: " + itemName);
+        String parentItem = dataTrain.get(0).substring(0, dataTrain.get(0).lastIndexOf("."));
+        System.out.println("Item's Name: " + parentItem);
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Data Type (UI1: 17; UI2: 18)");
@@ -42,21 +42,37 @@ public class Type_1 {
 
         for (int i = 0; i < dataTrain.size(); i++) {
 
-            String itemData = dataTrain.get(i);
+            String item = dataTrain.get(i);
 
-            String item = itemData.substring(0, itemData.lastIndexOf("."));
+            String itemAddress = item.substring(0, item.lastIndexOf("."));
 
-            int bit = Integer.parseInt(itemData.substring(itemData.lastIndexOf(".") + 1));
+            String bitCharacter = item.substring(item.lastIndexOf(".") + 1);
 
-            System.out.println("WordItem" + itemName + "|" + item + "-" + bit + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + item + "," + offset + "," + dataType + ",1,1,1,False,0,0,True," + bit + ",0,0,0,False,2\n");
+            int bit = getBit(bitCharacter) == null ? Integer.parseInt(bitCharacter) : getBit(bitCharacter);
+
+            System.out.println("WordItem" + parentItem + "|" + itemAddress + "-" + bit + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + itemAddress + "," + offset + "," + dataType + ",1,1,1,False,0,0,True," + bit + ",0,0,0,False,2\n");
 
             if (i + 1 < dataTrain.size()) {
-                int nextBit = Integer.parseInt(dataTrain.get(i + 1).substring(dataTrain.get(i + 1).lastIndexOf(".") + 1));
+                String nextBitCharacter = dataTrain.get(i + 1).substring(dataTrain.get(i + 1).lastIndexOf(".") + 1);
+
+                int nextBit = getBit(nextBitCharacter) == null ? Integer.parseInt(nextBitCharacter) : getBit(nextBitCharacter);
 
                 if (nextBit == 0) {
                     offset++;
                 }
             }
         }
+    }
+
+    static Integer getBit(String bit) {
+        return switch (bit) {
+            case "A" -> 10;
+            case "B" -> 11;
+            case "C" -> 12;
+            case "D" -> 13;
+            case "E" -> 14;
+            case "F" -> 15;
+            default -> null;
+        };
     }
 }
