@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.poi:poi:3.9'
-    implementation 'org.apache.poi:poi-ooxml:3.9'
+    implementation 'org.apache.poi:poi:5.2.3'
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
     compileOnly "org.projectlombok:lombok:1.18.24"
     annotationProcessor "org.projectlombok:lombok:1.18.24"

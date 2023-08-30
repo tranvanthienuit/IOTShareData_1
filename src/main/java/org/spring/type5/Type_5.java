@@ -1,6 +1,7 @@
 package org.spring.type5;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,11 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN;
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_FORMULA;
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC;
-import static org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING;
 
 public class Type_5 {
     public static final int COLUMN_INDEX_DIGIT = 0;
@@ -122,21 +118,21 @@ public class Type_5 {
 
     // Get cell value
     private static Object getCellValue(Cell cell) {
-        int cellType = cell.getCellType();
+        CellType cellType = cell.getCellType();
         Object cellValue = null;
         switch (cellType) {
-            case CELL_TYPE_BOOLEAN:
+            case BOOLEAN:
                 cellValue = cell.getBooleanCellValue();
                 break;
-            case CELL_TYPE_FORMULA:
+            case FORMULA:
                 Workbook workbook = cell.getSheet().getWorkbook();
                 FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
                 cellValue = evaluator.evaluate(cell).getNumberValue();
                 break;
-            case CELL_TYPE_NUMERIC:
+            case NUMERIC:
                 cellValue = cell.getNumericCellValue();
                 break;
-            case CELL_TYPE_STRING:
+            case STRING:
                 cellValue = cell.getStringCellValue();
                 break;
             default:
