@@ -55,18 +55,15 @@ public class Type_5 {
     }
 
     private static DataType getDataType(Model model) {
-        switch (model.getSize().intValue()) {
-            case 1:
-                return getType(model, DataType.UI1);
-            case 2:
-                return getType(model, DataType.UI2);
-            case 4:
-                return getType(model, DataType.UI4);
-            case 8:
-                return getType(model, DataType.UI8);
-            default:
-                return DataType.BSTR;
-        }
+        if (model.getSize().intValue() == 1)
+            return getType(model, DataType.UI1);
+        if (model.getSize().intValue() == 2)
+            return getType(model, DataType.UI2);
+        if (model.getSize().intValue() <= 4 && model.getSize().intValue() > 2)
+            return getType(model, DataType.UI4);
+        if (model.getSize().intValue() <= 8 && model.getSize().intValue() > 4)
+            return getType(model, DataType.UI8);
+        return DataType.BSTR;
     }
 
     private static DataType getType(Model model, DataType dataType) {
