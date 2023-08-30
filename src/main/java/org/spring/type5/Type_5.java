@@ -36,7 +36,7 @@ public class Type_5 {
         int offset = 0;
 
         for (Model model : models) {
-            offset = offset * 2;
+            offset = offset + 2;
             System.out.println("WordItem" + parent.getAddress() + "|" + model.getAddress() + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + model.getAddress() + "," + offset + "," + getDataType(model).getValue() + "," + getDataSize(model) + ",1,1,False,0,0,False,0,0,0,0,False,2\n");
             if (offset == 0) {
                 offset = 1;
