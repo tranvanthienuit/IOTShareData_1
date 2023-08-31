@@ -94,8 +94,11 @@ public class transmitter {
         List<ModelItem> modelItems = getOutPuts();
 
         for (ModelTransmitter modelTransmitter : getModels(file)) {
-            String subItem = modelTransmitter.getAddress().lastIndexOf(".") == -1 ? modelTransmitter.getAddress() : modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" +
-                    modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1);
+            String subItem;
+            if (modelTransmitter.getSubItem() == null) {
+                subItem = modelTransmitter.getAddress().lastIndexOf(".") == -1 ? modelTransmitter.getAddress() : modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" +
+                        modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1);
+            } else subItem = modelTransmitter.getSubItem();
 
             ModelTransmitter model = ModelTransmitter.builder()
                     .type(modelTransmitter.getType())
@@ -143,7 +146,6 @@ public class transmitter {
             while (cellIterator.hasNext()) {
                 //Read cell
                 Cell cell = cellIterator.next();
-                Object cellValue = getCellValue(cell);
 
                 // Set value for model object
                 int columnIndex = cell.getColumnIndex();
