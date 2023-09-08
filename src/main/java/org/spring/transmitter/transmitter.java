@@ -104,8 +104,14 @@ public class transmitter {
             String subItem;
             String item;
             if (modelTransmitter.getAddress().lastIndexOf(".") == -1) {
-                item = "WordItem" + modelTransmitter.getAddress();
-                subItem = CellType.BLANK.name();
+                String parentItem = getParentItem(modelTransmitter.getAddress(), modelItems);
+                if (parentItem != null) {
+                    item = parentItem;
+                    subItem = modelTransmitter.getAddress();
+                } else {
+                    item = "WordItem" + modelTransmitter.getAddress();
+                    subItem = CellType.BLANK.name();
+                }
             } else {
                 String bitCharacter = modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1);
 
