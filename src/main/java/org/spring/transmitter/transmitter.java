@@ -27,6 +27,8 @@ public class transmitter {
     public static final int COLUMN_INDEX_ADDRESS = 3;
     public static final int COLUMN_INDEX_SUB_ITEM = 5;
 
+    public static final String PATH = "D:/set_up_IotDataSahre/newproject/transmitter/";
+
     public static void main(String[] args) throws IOException, IllegalAccessException {
         System.out.println("Input file: ");
         Scanner scanner = new Scanner(System.in);
@@ -77,13 +79,18 @@ public class transmitter {
 
             for (Field field : fields) {
                 field.setAccessible(true);
-                Cell cell = row.createCell(cellid++);
-                cell.setCellValue(String.valueOf(field.get(modelTransmitter)));
+                Cell cell;
+                if (field.get(modelTransmitter) == CellType.BLANK.name()) {
+                    cell = row.createCell(cellid++, CellType.BLANK);
+                } else {
+                    cell = row.createCell(cellid++);
+                    cell.setCellValue(String.valueOf(field.get(modelTransmitter)));
+                }
             }
         }
 
         FileOutputStream out = new FileOutputStream(
-                new File("D:/set_up_IotDataSahre/project/IOT/" + file + ".xlsx"));
+                new File(PATH + "exel/" + file + ".xlsx"));
 
         workbook.write(out);
         out.close();
@@ -91,21 +98,25 @@ public class transmitter {
 
     private static List<ModelTransmitter> getTransmitter(String file) throws IOException {
         List<ModelTransmitter> modelTransmitters = new ArrayList<>();
-        List<ModelItem> modelItems = getOutPuts();
+        List<ModelItem> modelItems = getOutPuts(file);
 
         for (ModelTransmitter modelTransmitter : getModels(file)) {
             String subItem;
-            if (modelTransmitter.getSubItem() == null) {
-                subItem = modelTransmitter.getAddress().lastIndexOf(".") == -1 ? modelTransmitter.getAddress() : modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" +
+            String item;
+            if (modelTransmitter.getAddress().lastIndexOf(".") == -1) {
+                item = "WordItem" + modelTransmitter.getAddress();
+                subItem = CellType.BLANK.name();
+            } else {
+                subItem = modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" +
                         modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1);
-            } else subItem = modelTransmitter.getSubItem();
-
+                item = getParentItem(subItem, modelItems);
+            }
             ModelTransmitter model = ModelTransmitter.builder()
                     .type(modelTransmitter.getType())
                     .timing(modelTransmitter.getTiming())
                     .signID(modelTransmitter.getSignID())
                     .address(modelTransmitter.getAddress())
-                    .item(getParentItem(subItem, modelItems))
+                    .item(item)
                     .subItem(subItem)
                     .build();
             modelTransmitters.add(model);
@@ -121,8 +132,9 @@ public class transmitter {
         return null;
     }
 
+    // get input
     private static List<ModelTransmitter> getModels(String fileName) throws IOException {
-        FileInputStream file = new FileInputStream(new File("D:/set_up_IotDataSahre/project/IOT/input/" + fileName + ".xlsx"));
+        FileInputStream file = new FileInputStream(new File(PATH + "input/" + fileName + ".xlsx"));
         Workbook workbook = new XSSFWorkbook(file);
 
         Sheet sheet = workbook.getSheetAt(0);
@@ -176,9 +188,10 @@ public class transmitter {
         return ModelTransmitter;
     }
 
-    private static List<ModelItem> getOutPuts() throws IOException {
+    // get controller export
+    private static List<ModelItem> getOutPuts(String file) throws IOException {
         List<ModelItem> modelItems = new ArrayList<>();
-        Scanner scanner = new Scanner(new File("D:/output.csv"));
+        Scanner scanner = new Scanner(new File(PATH + "controller/" + file + ".csv"));
         while (scanner.hasNextLine()) {
             String iTem = getRecordFromLine(scanner.nextLine()).get(0);
             if (iTem.lastIndexOf("|") == -1)
