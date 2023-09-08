@@ -107,10 +107,16 @@ public class transmitter {
                 item = "WordItem" + modelTransmitter.getAddress();
                 subItem = CellType.BLANK.name();
             } else {
-                subItem = modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" +
-                        modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1);
+                String bitCharacter = modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1);
+
+                int bit = getBit(bitCharacter) == null ? Integer.parseInt(modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1)) : getBit(bitCharacter);
+
+                subItem = modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" + bit;
+
                 item = getParentItem(subItem, modelItems);
             }
+
+
             ModelTransmitter model = ModelTransmitter.builder()
                     .type(modelTransmitter.getType())
                     .timing(modelTransmitter.getTiming())
@@ -122,6 +128,18 @@ public class transmitter {
             modelTransmitters.add(model);
         }
         return modelTransmitters;
+    }
+
+    static Integer getBit(String bit) {
+        return switch (bit) {
+            case "A" -> 10;
+            case "B" -> 11;
+            case "C" -> 12;
+            case "D" -> 13;
+            case "E" -> 14;
+            case "F" -> 15;
+            default -> null;
+        };
     }
 
     private static String getParentItem(String subItem, List<ModelItem> modelItems) {
