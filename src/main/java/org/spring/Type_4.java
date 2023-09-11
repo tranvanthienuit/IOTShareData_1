@@ -10,7 +10,10 @@ import java.util.List;
 public class Type_4 {
     public static void main(String[] args) {
         String input =
-                "M172\n" +
+                "M8600\n" +
+                        "M8601\n" +
+                        "M8602\n" +
+                        "M172\n" +
                         "M72\n" +
                         "M8603\n" +
                         "M77\n" +
@@ -74,13 +77,23 @@ public class Type_4 {
 
     private static List<String> sort(List<String> list) {
         Collections.sort(list, new Comparator<String>() {
+
             @Override
-            public int compare(String s1, String s2) {
+            public int compare(String o1, String o2) {
+                String[] parts1 = o1.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+                String[] parts2 = o2.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
 
-                int number1 = Integer.parseInt(s1.replaceAll("\\D+", ""));
-                int number2 = Integer.parseInt(s2.replaceAll("\\D+", ""));
+                int result = parts1[0].compareTo(parts2[0]); // Compare characters
 
-                return number1 - number2;
+                if (result == 0) {
+                    // If characters are the same, compare digits
+                    Integer digits1 = Integer.parseInt(parts1[1]);
+                    Integer digits2 = Integer.parseInt(parts2[1]);
+                    result = digits1.compareTo(digits2);
+                }
+
+                return result;
+
             }
         });
 
