@@ -55,7 +55,7 @@ public class Type_4 {
                 int nextAddress = Integer.parseInt(dataTrain.get(i + 1).replaceAll("\\D+", ""));
                 if (address + 1 != nextAddress) {
                     int count = offset / 2 + 1;
-                    System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + count + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False,99,0,,0,0,0,0,0,False,0,0,False,0,8209,1," + count + ",False,2");
+                    System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + count + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + count + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + count + ",False,2");
                     System.out.println("WordItem" + parentItem + "|" + dataTrain.get(i) + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + offset + ",17,1,1,1,False,0,0,False,0,0,0,0,False,2");
                     parentItem = dataTrain.get(i + 1);
                     offset = 0;
@@ -66,7 +66,7 @@ public class Type_4 {
             }
             if (i == dataTrain.size() - 1) {
                 int count = offset / 2 + 1;
-                System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + count + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False,99,0,,0,0,0,0,0,False,0,0,False,0,8209,1," + count + ",False,2");
+                System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + count + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + count + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + count + ",False,2");
                 System.out.println("WordItem" + parentItem + "|" + parentItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + ",0,17,1,1,1,False,0,0,False,0,0,0,0,False,2");
             }
         }
