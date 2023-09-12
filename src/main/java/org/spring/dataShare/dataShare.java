@@ -66,8 +66,12 @@ public class dataShare {
     private static Item calculateOffset(Item item) {
         int offset = 0;
         for (SubItem subItem : item.getSubItems()) {
-            subItem.setOffset(offset);
+            if (item.getSubItems().get(0).getOffset() == null){
+                subItem.setOffset(offset);
+                continue;
+            }
             offset = offset + subItem.getDataSize();
+            subItem.setOffset(offset);
         }
         item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
         return item;
