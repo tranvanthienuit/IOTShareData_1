@@ -61,7 +61,24 @@ public class dataShare {
         for (SubItem subItem : item.getSubItems()) {
             Address address = subItem.getAddress();
             String addressSubItem = address.getBit() != null ? address.getVariable() + address.getAddressItem() + "-" + address.getBit() : address.getVariable() + address.getAddressItem();
-            System.out.println("WordItem" + parentItem + "|" + addressSubItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + subItem.getOffset() + "," + subItem.getTypeSubItem().getValue() + ",1,1,1,False,0,0,False,0,0,0,0,False,2");
+            System.out.println("WordItem" + parentItem + "|" + addressSubItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + subItem.getOffset() + "," + subItem.getTypeSubItem().getValue() + "," + getSubItemUnitSize(subItem.getTypeSubItem()) + ",1,1,False,0,0,False,0,0,0,0,False,2");
+        }
+    }
+
+    private static Integer getSubItemUnitSize(TypeSubItem typeSubItem) {
+        switch (typeSubItem) {
+            case UI2 -> {
+                return 2;
+            }
+            case UI4 -> {
+                return 4;
+            }
+            case UI8 -> {
+                return 8;
+            }
+            default -> {
+                return 1;
+            }
         }
     }
 
@@ -75,7 +92,11 @@ public class dataShare {
             offset = offset + subItem.getDataSize();
             subItem.setOffset(offset);
         }
-        item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
+        if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset().doubleValue() % 2 != 0) {
+            item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
+        } else {
+            item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2);
+        }
         return item;
     }
 
