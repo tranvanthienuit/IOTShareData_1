@@ -8,7 +8,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.spring.dataShare.model.Address;
-import org.spring.dataShare.model.DataSize;
 import org.spring.dataShare.model.Item;
 import org.spring.dataShare.model.SubItem;
 import org.spring.dataShare.model.TypeSubItem;
@@ -25,10 +24,9 @@ import java.util.stream.Collectors;
 
 public class dataShare {
     public static final int COLUMN_ITEM_CHARACTER = 0;
-    public static final int COLUMN_DATA_TYPE = 1;
-    public static final int COLUMN_DATA_FORM = 2;
-    public static final int COLUMN_DATA_SIZE = 3;
-    public static final int COLUMN_ADDRESS = 4;
+    public static final int COLUMN_DATA_FORM = 1;
+    public static final int COLUMN_DATA_SIZE = 2;
+    public static final int COLUMN_ADDRESS = 3;
     public static final String PATH = "D:/set_up_IotDataSahre/";
 
     public static final String ISO = "ASCII";
@@ -45,29 +43,61 @@ public class dataShare {
         }).collect(Collectors.toList());
 
         setItem(subItems);
+
+        for (SubItem subItem : subItems) {
+
+        }
     }
 
     private static List<Item> setItem(List<SubItem> subItems) {
         SubItem firstParent = subItems.get(0);
         List<Item> items = new ArrayList<>();
-        items.add(
-                Item.builder()
-                        .parentItem(firstParent)
-                        .subItems(List.of(firstParent))
-                        .build()
-        );
+        Item currentItem = Item.builder()
+                .parentItem(firstParent)
+                .subItems(List.of(firstParent))
+                .build();
+
+        items.add(currentItem);
 
         for (SubItem subItem : subItems) {
-            for (Item item : items) {
-
-                int lastSubItemAddress = item.getSubItems().get(item.getSubItems().size() - 1).getAddress().getAddressItem();
-                if (subItem.getAddress().getAddressItem() == lastSubItemAddress + DataSize.ONE.getValue()
-                        && subItem.getDataSize() == DataSize.ONE.getValue()) {
-
-                }
+            if (subItem.equals(items.get(0).getParentItem())) {
+                continue;
             }
+            currentItem = getCurrentItemAndAddSubItem(subItem, currentItem, items);
         }
         return items;
+    }
+
+
+    private static Item getCurrentItemAndAddSubItem(SubItem subItem, Item currentItem, List<Item> items) {
+
+        SubItem lastSubItem = currentItem.getSubItems().get(currentItem.getSubItems().size() - 1);
+        if (compareDataSize(lastSubItem, subItem)) {
+            List<SubItem> newSubItem = new ArrayList<>(currentItem.getSubItems());
+            newSubItem.add(subItem);
+            currentItem.setSubItems(newSubItem);
+            return currentItem;
+        } else {
+            Item item = Item.builder()
+                    .parentItem(subItem)
+                    .subItems(List.of(subItem))
+                    .build();
+            items.add(item);
+            return item;
+        }
+    }
+
+    private static boolean compareDataSize(SubItem lastSubItem, SubItem subItem) {
+        if (!lastSubItem.getAddress().getVariable().equals(subItem.getAddress().getVariable())) {
+            return false;
+        }
+        if (subItem.getAddress().getBit() != null
+                && lastSubItem.getAddress().getBit() != null
+                && lastSubItem.getAddress().getBit() + subItem.getDataSize() == subItem.getAddress().getBit()
+                || lastSubItem.getAddress().getAddressItem() + subItem.getDataSize() == subItem.getAddress().getAddressItem()) {
+            return true;
+        }
+        return lastSubItem.getAddress().getAddressItem() + 1 == subItem.getAddress().getAddressItem();
     }
 
     private static List<SubItem> getModels() throws IOException {
@@ -102,9 +132,6 @@ public class dataShare {
                 switch (columnIndex) {
                     case COLUMN_ITEM_CHARACTER:
                         subItem.setItemCharacter(((Double) getCellValue(cell)).intValue());
-                        break;
-                    case COLUMN_DATA_TYPE:
-                        subItem.setDataType((String) getCellValue(cell));
                         break;
                     case COLUMN_DATA_FORM:
                         subItem.setDataForm((String) getCellValue(cell));

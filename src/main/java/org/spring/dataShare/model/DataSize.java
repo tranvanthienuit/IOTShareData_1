@@ -8,7 +8,7 @@ public enum DataSize {
     ONE(1),
     TWO(2),
     FOUR(4),
-    SIZ(6),
+    SIX(6),
     EGHT(8)
     ;
 
@@ -17,6 +17,10 @@ public enum DataSize {
     }
 
     final int value;
+
+    public static DataSize getDataSize(Integer dataSize){
+        return DataSize.valueOf(dataSize.toString());
+    }
 
     DataSize(int value) {
         this.value = value;

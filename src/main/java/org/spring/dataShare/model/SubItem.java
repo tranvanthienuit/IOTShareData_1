@@ -13,15 +13,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SubItem implements Comparable<SubItem> {
     private Integer itemCharacter;
-    private String dataType;
-    private TypeSubItem typeSubItem;
     private String dataForm;
     private Integer dataSize;
     private Address address;
+    private TypeSubItem typeSubItem;
 
     @Override
     public String toString() {
-        return itemCharacter + " " + dataType + " " + dataSize + " " + address.toString();
+        return itemCharacter + " " + dataSize + " " + address.toString();
     }
 
     @Override

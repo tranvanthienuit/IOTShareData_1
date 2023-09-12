@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Item {
 
-    private int offset;
+    private int count;
 
     private SubItem parentItem;
 
