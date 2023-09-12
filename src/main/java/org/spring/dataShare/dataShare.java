@@ -127,7 +127,8 @@ public class dataShare {
                 || lastSubItem.getAddress().getAddressItem() + subItem.getDataSize() == subItem.getAddress().getAddressItem()) {
             return true;
         }
-        return lastSubItem.getAddress().getAddressItem() + 1 == subItem.getAddress().getAddressItem();
+        return subItem.getDataSize().equals(lastSubItem.getDataSize()) &&
+                lastSubItem.getAddress().getAddressItem() + 1 == subItem.getAddress().getAddressItem();
     }
 
     private static List<SubItem> getModels() throws IOException {
