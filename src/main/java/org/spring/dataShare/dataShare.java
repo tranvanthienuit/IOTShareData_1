@@ -56,6 +56,8 @@ public class dataShare {
         Address parentAddress = item.getParentItem().getAddress();
         String parentItem = parentAddress.getVariable() + parentAddress.getAddressItem();
         System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + item.getCount() + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + item.getCount() + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + item.getCount() + ",False,2");
+        if (item.getSubItems().size() == 1)
+            return;
         for (SubItem subItem : item.getSubItems()) {
             Address address = subItem.getAddress();
             String addressSubItem = address.getBit() != null ? address.getVariable() + address.getAddressItem() + "-" + address.getBit() : address.getVariable() + address.getAddressItem();
@@ -66,7 +68,7 @@ public class dataShare {
     private static Item calculateOffset(Item item) {
         int offset = 0;
         for (SubItem subItem : item.getSubItems()) {
-            if (item.getSubItems().get(0).getOffset() == null){
+            if (item.getSubItems().get(0).getOffset() == null) {
                 subItem.setOffset(offset);
                 continue;
             }
