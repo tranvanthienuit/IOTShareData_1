@@ -15,9 +15,9 @@ import java.util.Comparator;
 public class Address implements Comparable<Address> {
     private String variable;
 
-    private String addressItem;
+    private Integer addressItem;
 
-    private String bit;
+    private Integer bit;
 
     @Override
     public String toString() {

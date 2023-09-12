@@ -8,7 +8,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.spring.dataShare.model.Address;
+import org.spring.dataShare.model.DataSize;
+import org.spring.dataShare.model.Item;
 import org.spring.dataShare.model.SubItem;
+import org.spring.dataShare.model.TypeSubItem;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class dataShare {
     public static final int COLUMN_ITEM_CHARACTER = 0;
@@ -26,12 +31,43 @@ public class dataShare {
     public static final int COLUMN_ADDRESS = 4;
     public static final String PATH = "D:/set_up_IotDataSahre/";
 
+    public static final String ISO = "ASCII";
+
     public static void main(String[] args) throws IOException {
         List<SubItem> subItems = getModels();
         Collections.sort(subItems);
+
+        // convert dataSize if subItem have ASCII
+        subItems.stream().peek(subItem -> {
+            if (subItem.getDataForm() != null && subItem.getDataForm().equals(ISO)) {
+                subItem.setDataSize(subItem.getItemCharacter());
+            }
+        }).collect(Collectors.toList());
+
+        setItem(subItems);
+    }
+
+    private static List<Item> setItem(List<SubItem> subItems) {
+        SubItem firstParent = subItems.get(0);
+        List<Item> items = new ArrayList<>();
+        items.add(
+                Item.builder()
+                        .parentItem(firstParent)
+                        .subItems(List.of(firstParent))
+                        .build()
+        );
+
         for (SubItem subItem : subItems) {
-            subItem.toString();
+            for (Item item : items) {
+
+                int lastSubItemAddress = item.getSubItems().get(item.getSubItems().size() - 1).getAddress().getAddressItem();
+                if (subItem.getAddress().getAddressItem() == lastSubItemAddress + DataSize.ONE.getValue()
+                        && subItem.getDataSize() == DataSize.ONE.getValue()) {
+
+                }
+            }
         }
+        return items;
     }
 
     private static List<SubItem> getModels() throws IOException {
@@ -65,7 +101,7 @@ public class dataShare {
                 int columnIndex = cell.getColumnIndex();
                 switch (columnIndex) {
                     case COLUMN_ITEM_CHARACTER:
-                        subItem.setItemCharacter((String) getCellValue(cell));
+                        subItem.setItemCharacter(((Double) getCellValue(cell)).intValue());
                         break;
                     case COLUMN_DATA_TYPE:
                         subItem.setDataType((String) getCellValue(cell));
@@ -74,7 +110,7 @@ public class dataShare {
                         subItem.setDataForm((String) getCellValue(cell));
                         break;
                     case COLUMN_DATA_SIZE:
-                        subItem.setDataSize((String) getCellValue(cell));
+                        subItem.setDataSize(((Double) getCellValue(cell)).intValue());
                         break;
                     case COLUMN_ADDRESS:
                         subItem.setAddress(getAddress(cell));
@@ -84,20 +120,34 @@ public class dataShare {
                 }
 
             }
+            subItem.setTypeSubItem(getTypeSubItem(subItem));
+
             subItems.add(subItem);
         }
 
         return subItems;
     }
 
+    private static TypeSubItem getTypeSubItem(SubItem subItem) {
+        if (Objects.equals(subItem.getDataForm(), ISO)) {
+            return TypeSubItem.BSTR;
+        }
+        return switch (subItem.getDataSize()) {
+            case 2 -> TypeSubItem.UI2;
+            case 4 -> TypeSubItem.UI4;
+            case 6, 8 -> TypeSubItem.UI8;
+            default -> TypeSubItem.UI1;
+        };
+    }
+
     private static Address getAddress(Cell cell) {
         String cellItem = (String) getCellValue(cell);
 
         String domain = cellItem.lastIndexOf(".") == -1 ? cellItem : cellItem.substring(0, cellItem.lastIndexOf("."));
-        String bit = cellItem.lastIndexOf(".") == -1 ? null : cellItem.substring(cellItem.lastIndexOf("."));
+        Integer bit = cellItem.lastIndexOf(".") == -1 ? null : Integer.parseInt(cellItem.substring(cellItem.lastIndexOf(".") + 1));
 
         String variable = domain.replaceAll("[^A-Za-z]+", "");
-        String addressItem = domain.replaceAll("[^0-9.]", "");
+        Integer addressItem = Integer.parseInt(domain.replaceAll("[^0-9.]", ""));
 
         return Address.builder()
                 .variable(variable)
@@ -120,7 +170,7 @@ public class dataShare {
                 cellValue = evaluator.evaluate(cell).getNumberValue();
                 break;
             case NUMERIC:
-                cellValue = String.valueOf(cell.getNumericCellValue());
+                cellValue = cell.getNumericCellValue();
                 break;
             case STRING:
                 cellValue = cell.getStringCellValue();

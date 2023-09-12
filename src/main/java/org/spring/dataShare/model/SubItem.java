@@ -6,18 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Comparator;
-
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubItem implements Comparable<SubItem>{
-    private String itemCharacter;
+public class SubItem implements Comparable<SubItem> {
+    private Integer itemCharacter;
     private String dataType;
+    private TypeSubItem typeSubItem;
     private String dataForm;
-    private String dataSize;
+    private Integer dataSize;
     private Address address;
 
     @Override
