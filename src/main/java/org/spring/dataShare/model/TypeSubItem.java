@@ -12,6 +12,10 @@ public enum TypeSubItem {
     ;
     private final int value;
 
+    public int getValue() {
+        return value;
+    }
+
     TypeSubItem(int value) {
         this.value = value;
     }

@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubItem implements Comparable<SubItem> {
+    private Integer offset;
     private Integer itemCharacter;
     private String dataForm;
     private Integer dataSize;

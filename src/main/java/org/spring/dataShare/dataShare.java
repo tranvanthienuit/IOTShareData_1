@@ -42,11 +42,35 @@ public class dataShare {
             }
         }).collect(Collectors.toList());
 
-        setItem(subItems);
+        List<Item> items = setItem(subItems);
 
-        for (SubItem subItem : subItems) {
+        System.out.println("Item Name,IsGroupMember,Item Enabled,Variable Enabled,Variable Name,Variable Option,Variable Class,Variable Object Name,Variable Object Option,Class Hierarchy,File Object Delimiter,Description Enabled,Description,Attribute,Link Item,Initialize Enabled,Initialize Data,Initialize Type,Force to Change,Use Empty,Deactivate,Use History,OnChange Events,Deadband Enabled,Deadbnad Min Value,Deadbnad Max Value,Filter Enabled,Filter Min Value,Filter Max Value,Chattering Enabled,Chattering Max Value,Mask Enabled,Mask Value,BCD Enabled,Request Enabled,Request Type,Request Enabled (Write),Request Type (Write),Allowed Min Value,Allowed Max Value,Allowed Step Value,Allowed List,Allowed Default,Misc Data Type,BLOB Size,BLOB Text,EU Unit,Compare Arrays,Extract Linking,Item Type,Link Property,Sub Item,Sub Item Block Size,Sub Item Block Update,Sub Item Parent Name,Sub Item Offset,Sub Item Data Type,Sub Item Unit Size,Sub Item Elem Count,Sub Item Byte Order,Direct Reading,Direct Reading Suppressed Time,Sub Item Offset Unit,Sub Item Bit,Sub Item Bit Position,Parent Item Data Type,Parent Item Unit Size,Parent Item Elem Count,Not Reconnect Judge Item,Server Publishing Setting");
 
+        for (Item item : items) {
+            calculateOffset(item);
+            printItem(item);
         }
+    }
+
+    private static void printItem(Item item) {
+        Address parentAddress = item.getParentItem().getAddress();
+        String parentItem = parentAddress.getVariable() + parentAddress.getAddressItem();
+        System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + item.getCount() + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + item.getCount() + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + item.getCount() + ",False,2");
+        for (SubItem subItem : item.getSubItems()) {
+            Address address = subItem.getAddress();
+            String addressSubItem = address.getBit() != null ? address.getVariable() + address.getAddressItem() + "-" + address.getBit() : address.getVariable() + address.getAddressItem();
+            System.out.println("WordItem" + parentItem + "|" + addressSubItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + subItem.getOffset() + "," + subItem.getTypeSubItem().getValue() + ",1,1,1,False,0,0,False,0,0,0,0,False,2");
+        }
+    }
+
+    private static Item calculateOffset(Item item) {
+        int offset = 0;
+        for (SubItem subItem : item.getSubItems()) {
+            subItem.setOffset(offset);
+            offset = offset + subItem.getDataSize();
+        }
+        item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
+        return item;
     }
 
     private static List<Item> setItem(List<SubItem> subItems) {
@@ -160,10 +184,10 @@ public class dataShare {
             return TypeSubItem.BSTR;
         }
         return switch (subItem.getDataSize()) {
+            case 0, 1 -> TypeSubItem.UI1;
             case 2 -> TypeSubItem.UI2;
-            case 4 -> TypeSubItem.UI4;
-            case 6, 8 -> TypeSubItem.UI8;
-            default -> TypeSubItem.UI1;
+            case 3, 4 -> TypeSubItem.UI4;
+            default -> TypeSubItem.UI8;
         };
     }
 
