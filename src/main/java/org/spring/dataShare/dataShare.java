@@ -97,7 +97,7 @@ public class dataShare {
             }
             SubItem previousSubItem = subItems.get(i - 1);
             if (previousSubItem.getAddress().getAddressItem() < subItem.getAddress().getAddressItem()) {
-                offset = offset + subItem.getDataSize();
+                offset = offset + previousSubItem.getDataSize();
             }
             subItem.setOffset(offset);
         }
