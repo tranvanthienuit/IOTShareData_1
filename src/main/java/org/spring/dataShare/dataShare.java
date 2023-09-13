@@ -61,12 +61,15 @@ public class dataShare {
         for (SubItem subItem : item.getSubItems()) {
             Address address = subItem.getAddress();
             String addressSubItem = address.getBit() != null ? address.getVariable() + address.getAddressItem() + "-" + address.getBit() : address.getVariable() + address.getAddressItem();
-            System.out.println("WordItem" + parentItem + "|" + addressSubItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + subItem.getOffset() + "," + subItem.getTypeSubItem().getValue() + "," + getSubItemUnitSize(subItem.getTypeSubItem()) + ",1,1,False,0,0,False,0,0,0,0,False,2");
+            System.out.println("WordItem" + parentItem + "|" + addressSubItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + subItem.getOffset() + "," + subItem.getTypeSubItem().getValue() + "," + getSubItemUnitSize(subItem) + ",1,1,False,0,0,False,0,0,0,0,False,2");
         }
     }
 
-    private static Integer getSubItemUnitSize(TypeSubItem typeSubItem) {
-        switch (typeSubItem) {
+    private static Integer getSubItemUnitSize(SubItem subItem) {
+        switch (subItem.getTypeSubItem()) {
+            case BSTR -> {
+                return subItem.getDataSize();
+            }
             case UI2 -> {
                 return 2;
             }
@@ -91,6 +94,10 @@ public class dataShare {
             }
             offset = offset + subItem.getDataSize();
             subItem.setOffset(offset);
+        }
+        if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset() == 0) {
+            item.setCount(1);
+            return item;
         }
         if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset().doubleValue() % 2 != 0) {
             item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
