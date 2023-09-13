@@ -137,7 +137,7 @@ public class dataShare {
     private static Item getCurrentItemAndAddSubItem(SubItem subItem, Item currentItem, List<Item> items) {
 
         SubItem lastSubItem = currentItem.getSubItems().get(currentItem.getSubItems().size() - 1);
-        if (compareDataSize(lastSubItem, subItem)) {
+        if (compareSubItem(lastSubItem, subItem)) {
             List<SubItem> newSubItem = new ArrayList<>(currentItem.getSubItems());
             newSubItem.add(subItem);
             currentItem.setSubItems(newSubItem);
@@ -152,7 +152,7 @@ public class dataShare {
         }
     }
 
-    private static boolean compareDataSize(SubItem lastSubItem, SubItem subItem) {
+    private static boolean compareSubItem(SubItem lastSubItem, SubItem subItem) {
         if (!lastSubItem.getAddress().getVariable().equals(subItem.getAddress().getVariable())) {
             return false;
         }
