@@ -95,10 +95,17 @@ public class dataShare {
             offset = offset + subItem.getDataSize();
             subItem.setOffset(offset);
         }
+
         if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset() == 0) {
-            item.setCount(1);
+            if (item.getSubItems().get(item.getSubItems().size() - 1).getDataSize() % 2 != 0) {
+                item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getDataSize() / 2 + 1);
+            } else {
+                item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getDataSize() / 2);
+            }
             return item;
         }
+
+
         if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset().doubleValue() % 2 != 0) {
             item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
         } else {
