@@ -97,7 +97,7 @@ public class dataShare {
             }
             SubItem previousSubItem = subItems.get(i - 1);
             if (previousSubItem.getAddress().getAddressItem() < subItem.getAddress().getAddressItem()) {
-                offset = offset + previousSubItem.getDataSize();
+                offset = offset + previousSubItem.getTypeSubItem().getOffset();
             }
             subItem.setOffset(offset);
         }
@@ -135,6 +135,16 @@ public class dataShare {
                 continue;
             }
             currentItem = getCurrentItemAndAddSubItem(subItem, currentItem, items);
+        }
+
+        for (SubItem subItem : subItems) {
+            if (subItem.getAddress().getBit() != null && subItem.getAddress().getBit() > 7) {
+                for (SubItem subItem1 : subItems) {
+                    if (Objects.equals(subItem1.getAddress().getAddressItem(), subItem.getAddress().getAddressItem())) {
+                        subItem1.setTypeSubItem(TypeSubItem.UI2);
+                    }
+                }
+            }
         }
         return items;
     }
