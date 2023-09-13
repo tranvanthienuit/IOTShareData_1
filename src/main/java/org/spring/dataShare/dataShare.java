@@ -113,9 +113,9 @@ public class dataShare {
 
 
         if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset().doubleValue() % 2 != 0) {
-            item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
-        } else {
             item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2);
+        } else {
+            item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
         }
         return item;
     }
