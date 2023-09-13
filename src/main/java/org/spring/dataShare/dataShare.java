@@ -164,8 +164,8 @@ public class dataShare {
         }
         if (subItem.getAddress().getBit() != null
                 && lastSubItem.getAddress().getBit() != null
-                && lastSubItem.getAddress().getBit() + subItem.getDataSize() == subItem.getAddress().getBit()
-                || lastSubItem.getAddress().getAddressItem() + subItem.getDataSize() == subItem.getAddress().getAddressItem()
+                && lastSubItem.getAddress().getBit() + lastSubItem.getDataSize() == subItem.getAddress().getBit()
+                || lastSubItem.getAddress().getAddressItem() + lastSubItem.getDataSize() == subItem.getAddress().getAddressItem()
                 || lastSubItem.getAddress().getAddressItem().equals(subItem.getAddress().getAddressItem())) {
             return true;
         }
