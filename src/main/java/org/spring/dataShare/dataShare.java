@@ -87,12 +87,18 @@ public class dataShare {
 
     private static Item calculateOffset(Item item) {
         int offset = 0;
-        for (SubItem subItem : item.getSubItems()) {
-            if (item.getSubItems().get(0).getOffset() == null) {
+        List<SubItem> subItems = item.getSubItems();
+        for (int i = 0; i < subItems.size(); i++) {
+            SubItem subItem = subItems.get(i);
+
+            if (subItems.get(0).getOffset() == null) {
                 subItem.setOffset(offset);
                 continue;
             }
-            offset = offset + subItem.getDataSize();
+            SubItem previousSubItem = subItems.get(i - 1);
+            if (previousSubItem.getAddress().getAddressItem() < subItem.getAddress().getAddressItem()) {
+                offset = offset + subItem.getDataSize();
+            }
             subItem.setOffset(offset);
         }
 
@@ -159,7 +165,8 @@ public class dataShare {
         if (subItem.getAddress().getBit() != null
                 && lastSubItem.getAddress().getBit() != null
                 && lastSubItem.getAddress().getBit() + subItem.getDataSize() == subItem.getAddress().getBit()
-                || lastSubItem.getAddress().getAddressItem() + subItem.getDataSize() == subItem.getAddress().getAddressItem()) {
+                || lastSubItem.getAddress().getAddressItem() + subItem.getDataSize() == subItem.getAddress().getAddressItem()
+                || lastSubItem.getAddress().getAddressItem().equals(subItem.getAddress().getAddressItem())) {
             return true;
         }
         return subItem.getDataSize().equals(lastSubItem.getDataSize()) &&
