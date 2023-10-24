@@ -51,7 +51,7 @@ public class dataShare {
         String parentItem = parentAddress.getVariable() + parentAddress.getAddressItem();
         System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + item.getCount() + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + item.getCount() + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + item.getCount() + ",False,2");
         if (item.getSubItems().size() == 1)
-            return elementCount;
+            return 1;
         for (SubItem subItem : item.getSubItems()) {
             elementCount++;
             Address address = subItem.getAddress();
