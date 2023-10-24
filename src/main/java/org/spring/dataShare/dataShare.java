@@ -40,23 +40,25 @@ public class dataShare {
         int elementCount = 0;
         for (Item item : items) {
             calculateOffset(item);
-            printItem(item, elementCount);
+            elementCount = printItem(item) + elementCount;
         }
         System.out.println("Total element: " + elementCount);
     }
 
-    private static void printItem(Item item, int elementCount) {
+    private static int printItem(Item item) {
+        int elementCount = 0;
         Address parentAddress = item.getParentItem().getAddress();
         String parentItem = parentAddress.getVariable() + parentAddress.getAddressItem();
         System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + item.getCount() + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + item.getCount() + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + item.getCount() + ",False,2");
         if (item.getSubItems().size() == 1)
-            return;
+            return elementCount;
         for (SubItem subItem : item.getSubItems()) {
             elementCount++;
             Address address = subItem.getAddress();
             String addressSubItem = address.getBit() != null ? address.getVariable() + address.getAddressItem() + "-" + address.getBit() : address.getVariable() + address.getAddressItem();
             System.out.println("WordItem" + parentItem + "|" + addressSubItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + subItem.getOffset() + "," + subItem.getTypeSubItem().getValue() + "," + getSubItemUnitSize(subItem) + ",1,1,False,0,0,False,0,0,0,0,False,2");
         }
+        return elementCount;
     }
 
     private static Integer getSubItemUnitSize(SubItem subItem) {
