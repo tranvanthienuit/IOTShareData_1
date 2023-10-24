@@ -138,7 +138,7 @@ public class dataShare {
             s2Number = Integer.parseInt(s2.replaceAll("[^0-9.]", ""));
             s2Character = s2.replaceAll("[^A-Za-z]+", "");
 
-            s1Number = Integer.parseInt(s1.substring(0, String.valueOf(s2Number).length() - 1));
+            s1Number = Integer.parseInt(s1.substring(0, String.valueOf(s2Number).length()));
             s1Character = s1.substring(String.valueOf(s2Number).length());
         }
 
@@ -146,12 +146,12 @@ public class dataShare {
             s1Number = Integer.parseInt(s2.replaceAll("[^0-9.]", ""));
             s1Character = s2.replaceAll("[^A-Za-z]+", "");
 
-            s2Number = Integer.parseInt(s2.substring(0, String.valueOf(s1Number).length() - 1));
+            s2Number = Integer.parseInt(s2.substring(0, String.valueOf(s1Number).length()));
             s2Character = s1.substring(String.valueOf(s1Number).length());
         }
 
         if (s1Number.equals(s2Number)) {
-            return getBit(s1Character) < getBit(s2Character);
+            return (StringUtils.isNumeric(s1Character) ? Integer.parseInt(s1Character) : getBit(s1Character)) < (StringUtils.isNumeric(s2Character) ? Integer.parseInt(s2Character) : getBit(s2Character));
         }
         return s1Number < s2Number;
     }
@@ -244,7 +244,7 @@ public class dataShare {
             String s2Character = s2.replaceAll("[^A-Za-z]+", "");
 
 
-            int s1Number = Integer.parseInt(s1.substring(0, String.valueOf(s2Number).length() - 1));
+            int s1Number = Integer.parseInt(s1.substring(0, String.valueOf(s2Number).length()));
             int s1Character = Integer.parseInt(s1.substring(String.valueOf(s2Number).length()));
 
             return s1Number == s2Number && s1Character + lastDataSize == getBit(s2Character);
