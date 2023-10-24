@@ -27,7 +27,7 @@ public class transmitter {
     public static final int COLUMN_INDEX_ADDRESS = 3;
     public static final int COLUMN_INDEX_SUB_ITEM = 5;
 
-    public static final String PATH = "D:/set_up_IotDataSahre/newproject/transmitter/";
+    public static final String PATH = "D:/REP_DP_IOT/";
 
     public static void main(String[] args) throws IOException, IllegalAccessException {
         System.out.println("Input file: ");

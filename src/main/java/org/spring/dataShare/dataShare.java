@@ -1,11 +1,6 @@
 package org.spring.dataShare;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.spring.dataShare.model.Address;
 import org.spring.dataShare.model.Item;
@@ -15,11 +10,7 @@ import org.spring.dataShare.model.TypeSubItem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class dataShare {
@@ -27,7 +18,7 @@ public class dataShare {
     public static final int COLUMN_DATA_FORM = 1;
     public static final int COLUMN_DATA_SIZE = 2;
     public static final int COLUMN_ADDRESS = 3;
-    public static final String PATH = "D:/set_up_IotDataSahre/";
+    public static final String PATH = "D:/REP_DP_IOT/";
 
     public static final String ISO = "ASCII";
 
@@ -46,19 +37,22 @@ public class dataShare {
 
         System.out.println("Item Name,IsGroupMember,Item Enabled,Variable Enabled,Variable Name,Variable Option,Variable Class,Variable Object Name,Variable Object Option,Class Hierarchy,File Object Delimiter,Description Enabled,Description,Attribute,Link Item,Initialize Enabled,Initialize Data,Initialize Type,Force to Change,Use Empty,Deactivate,Use History,OnChange Events,Deadband Enabled,Deadbnad Min Value,Deadbnad Max Value,Filter Enabled,Filter Min Value,Filter Max Value,Chattering Enabled,Chattering Max Value,Mask Enabled,Mask Value,BCD Enabled,Request Enabled,Request Type,Request Enabled (Write),Request Type (Write),Allowed Min Value,Allowed Max Value,Allowed Step Value,Allowed List,Allowed Default,Misc Data Type,BLOB Size,BLOB Text,EU Unit,Compare Arrays,Extract Linking,Item Type,Link Property,Sub Item,Sub Item Block Size,Sub Item Block Update,Sub Item Parent Name,Sub Item Offset,Sub Item Data Type,Sub Item Unit Size,Sub Item Elem Count,Sub Item Byte Order,Direct Reading,Direct Reading Suppressed Time,Sub Item Offset Unit,Sub Item Bit,Sub Item Bit Position,Parent Item Data Type,Parent Item Unit Size,Parent Item Elem Count,Not Reconnect Judge Item,Server Publishing Setting");
 
+        int elementCount = 0;
         for (Item item : items) {
             calculateOffset(item);
-            printItem(item);
+            printItem(item, elementCount);
         }
+        System.out.println("Total element: " + elementCount);
     }
 
-    private static void printItem(Item item) {
+    private static void printItem(Item item, int elementCount) {
         Address parentAddress = item.getParentItem().getAddress();
         String parentItem = parentAddress.getVariable() + parentAddress.getAddressItem();
         System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + item.getCount() + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + item.getCount() + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + item.getCount() + ",False,2");
         if (item.getSubItems().size() == 1)
             return;
         for (SubItem subItem : item.getSubItems()) {
+            elementCount++;
             Address address = subItem.getAddress();
             String addressSubItem = address.getBit() != null ? address.getVariable() + address.getAddressItem() + "-" + address.getBit() : address.getVariable() + address.getAddressItem();
             System.out.println("WordItem" + parentItem + "|" + addressSubItem + ",False,True,False,,,0,,,False,\\,True,,0,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,True,0,0,WordItem" + parentItem + "," + subItem.getOffset() + "," + subItem.getTypeSubItem().getValue() + "," + getSubItemUnitSize(subItem) + ",1,1,False,0,0,False,0,0,0,0,False,2");
