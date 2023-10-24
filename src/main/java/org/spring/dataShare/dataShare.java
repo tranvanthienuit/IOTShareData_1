@@ -218,7 +218,7 @@ public class dataShare {
             return true;
         }
         return subItem.getDataSize().equals(lastSubItem.getDataSize()) &&
-                Integer.parseInt(lastSubItem.getAddress().getAddressItem()) + 1 == Integer.parseInt(subItem.getAddress().getAddressItem());
+                checkAddressData(lastSubItem.getAddress().getAddressItem(), subItem.getAddress().getAddressItem(), 1);
     }
 
     private static boolean checkAddressData(String s1, String s2, Integer lastDataSize) {
