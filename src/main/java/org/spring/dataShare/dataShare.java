@@ -1,5 +1,6 @@
 package org.spring.dataShare;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.spring.dataShare.model.Address;
@@ -92,7 +93,7 @@ public class dataShare {
                 continue;
             }
             SubItem previousSubItem = subItems.get(i - 1);
-            if (previousSubItem.getAddress().getAddressItem() < subItem.getAddress().getAddressItem()) {
+            if (compareAddressItem(previousSubItem.getAddress().getAddressItem(), subItem.getAddress().getAddressItem())) {
                 offset = offset + previousSubItem.getTypeSubItem().getOffset();
             }
             subItem.setOffset(offset);
@@ -116,6 +117,45 @@ public class dataShare {
         return item;
     }
 
+    private static boolean compareAddressItem(String s1, String s2) {
+        // both number
+        if (StringUtils.isNumeric(s1) && StringUtils.isNumeric(s2)) {
+            return Integer.parseInt(s1) < Integer.parseInt(s2);
+        }
+
+        Integer s1Number = 0, s2Number = 0;
+        String s1Character = "", s2Character = "";
+
+        if (!StringUtils.isNumeric(s1) && !StringUtils.isNumeric(s2)) {
+            s1Number = Integer.parseInt(s1.replaceAll("[^0-9.]", ""));
+            s1Character = s1.replaceAll("[^A-Za-z]+", "");
+
+            s2Number = Integer.parseInt(s2.replaceAll("[^0-9.]", ""));
+            s2Character = s2.replaceAll("[^A-Za-z]+", "");
+        }
+
+        if (StringUtils.isNumeric(s1) && !StringUtils.isNumeric(s2)) {
+            s2Number = Integer.parseInt(s2.replaceAll("[^0-9.]", ""));
+            s2Character = s2.replaceAll("[^A-Za-z]+", "");
+
+            s1Number = Integer.parseInt(s1.substring(0, String.valueOf(s2Number).length() - 1));
+            s1Character = s1.substring(String.valueOf(s2Number).length());
+        }
+
+        if (!StringUtils.isNumeric(s1) && StringUtils.isNumeric(s2)) {
+            s1Number = Integer.parseInt(s2.replaceAll("[^0-9.]", ""));
+            s1Character = s2.replaceAll("[^A-Za-z]+", "");
+
+            s2Number = Integer.parseInt(s2.substring(0, String.valueOf(s1Number).length() - 1));
+            s2Character = s1.substring(String.valueOf(s1Number).length());
+        }
+
+        if (s1Number.equals(s2Number)) {
+            return getBit(s1Character) < getBit(s2Character);
+        }
+        return s1Number < s2Number;
+    }
+
     private static List<Item> setItem(List<SubItem> subItems) {
         SubItem firstParent = subItems.get(0);
         List<Item> items = new ArrayList<>();
@@ -134,7 +174,9 @@ public class dataShare {
         }
 
         for (SubItem subItem : subItems) {
-            if (subItem.getAddress().getBit() != null && subItem.getAddress().getBit() > 7) {
+            if (subItem.getAddress().getBit() != null
+                    && ((StringUtils.isNumeric(subItem.getAddress().getBit()) && Integer.parseInt(subItem.getAddress().getBit()) > 7)
+                    || (!StringUtils.isNumeric(subItem.getAddress().getBit()) && getBit(subItem.getAddress().getBit()) > 7))) {
                 for (SubItem subItem1 : subItems) {
                     if (Objects.equals(subItem1.getAddress().getAddressItem(), subItem.getAddress().getAddressItem())) {
                         subItem1.setTypeSubItem(TypeSubItem.UI2);
@@ -170,13 +212,64 @@ public class dataShare {
         }
         if (subItem.getAddress().getBit() != null
                 && lastSubItem.getAddress().getBit() != null
-                && lastSubItem.getAddress().getBit() + lastSubItem.getDataSize() == subItem.getAddress().getBit()
-                || lastSubItem.getAddress().getAddressItem() + lastSubItem.getDataSize() == subItem.getAddress().getAddressItem()
+                && checkBitData(lastSubItem.getAddress().getBit(), subItem.getAddress().getBit(), lastSubItem.getDataSize())
+                || checkAddressData(lastSubItem.getAddress().getAddressItem(), subItem.getAddress().getAddressItem(), lastSubItem.getDataSize())
                 || lastSubItem.getAddress().getAddressItem().equals(subItem.getAddress().getAddressItem())) {
             return true;
         }
         return subItem.getDataSize().equals(lastSubItem.getDataSize()) &&
-                lastSubItem.getAddress().getAddressItem() + 1 == subItem.getAddress().getAddressItem();
+                Integer.parseInt(lastSubItem.getAddress().getAddressItem()) + 1 == Integer.parseInt(subItem.getAddress().getAddressItem());
+    }
+
+    private static boolean checkAddressData(String s1, String s2, Integer lastDataSize) {
+        // both number
+        if (StringUtils.isNumeric(s1) && StringUtils.isNumeric(s2) && Integer.parseInt(s1) + lastDataSize == Integer.parseInt(s2))
+            return true;
+        //both character
+        if (!StringUtils.isNumeric(s1) && !StringUtils.isNumeric(s2)) {
+
+            Integer s1Number = Integer.parseInt(s1.replaceAll("[^0-9.]", ""));
+            String s1Character = s1.replaceAll("[^A-Za-z]+", "");
+
+            Integer s2Number = Integer.parseInt(s2.replaceAll("[^0-9.]", ""));
+            String s2Character = s2.replaceAll("[^A-Za-z]+", "");
+
+            if (s1Number.equals(s2Number) && getBit(s1Character) + lastDataSize == getBit(s2Character))
+                return true;
+        }
+        // s2 have character
+        if (StringUtils.isNumeric(s1) && !StringUtils.isNumeric(s2)) {
+
+            int s2Number = Integer.parseInt(s2.replaceAll("[^0-9.]", ""));
+            String s2Character = s2.replaceAll("[^A-Za-z]+", "");
+
+
+            int s1Number = Integer.parseInt(s1.substring(0, String.valueOf(s2Number).length() - 1));
+            int s1Character = Integer.parseInt(s1.substring(String.valueOf(s2Number).length()));
+
+            return s1Number == s2Number && s1Character + lastDataSize == getBit(s2Character);
+        }
+        return false;
+    }
+
+    private static boolean checkBitData(String s1, String s2, Integer lastDataSize) {
+        if (StringUtils.isNumeric(s1) && StringUtils.isNumeric(s2) && Integer.parseInt(s1) + lastDataSize == Integer.parseInt(s2))
+            return true;
+        if (!StringUtils.isNumeric(s1) && !StringUtils.isNumeric(s2) && getBit(s1) + lastDataSize == getBit(s2))
+            return true;
+        return StringUtils.isNumeric(s1) && !StringUtils.isNumeric(s2) && Integer.parseInt(s1) + lastDataSize == getBit(s2);
+    }
+
+    static Integer getBit(String bit) {
+        return switch (bit) {
+            case "A" -> 10;
+            case "B" -> 11;
+            case "C" -> 12;
+            case "D" -> 13;
+            case "E" -> 14;
+            case "F" -> 15;
+            default -> null;
+        };
     }
 
     private static List<SubItem> getModels() throws IOException {
@@ -250,10 +343,13 @@ public class dataShare {
         String cellItem = (String) getCellValue(cell);
 
         String domain = cellItem.lastIndexOf(".") == -1 ? cellItem : cellItem.substring(0, cellItem.lastIndexOf("."));
-        Integer bit = cellItem.lastIndexOf(".") == -1 ? null : Integer.parseInt(cellItem.substring(cellItem.lastIndexOf(".") + 1));
+        String bit = cellItem.lastIndexOf(".") == -1 ? null : cellItem.substring(cellItem.lastIndexOf(".") + 1);
 
         String variable = domain.replaceAll("[^A-Za-z]+", "");
-        Integer addressItem = Integer.parseInt(domain.replaceAll("[^0-9.]", ""));
+        if (variable.length() > 1) {
+            variable = domain.substring(0, 1);
+        }
+        String addressItem = domain.substring(variable.length());
 
         return Address.builder()
                 .variable(variable)
