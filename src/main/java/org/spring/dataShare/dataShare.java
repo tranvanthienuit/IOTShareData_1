@@ -50,7 +50,7 @@ public class dataShare {
         int elementCount = 0;
         Address parentAddress = item.getParentItem().getAddress();
         String parentItem = parentAddress.getVariable() + parentAddress.getAddressItem();
-        System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + item.getCount() + ",VT=Bit',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + item.getCount() + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + item.getCount() + ",False,2");
+        System.out.println("WordItem" + parentItem + ",False,True,True," + parentItem + ",'ELEM=" + item.getCount() + ",VT=UI2',0,,,False,\\,True,,1,,False,,3,0,False,False,True,False,False,0,0,False,0,0,False,0,False,0,False,False,12,False,12,,,,,,,,,,True,False,0,0,False," + item.getCount() + ",0,,0,0,0,0,0,False,0,0,False,0,8209,1," + item.getCount() + ",False,2");
         if (item.getSubItems().size() == 1)
             return 1;
         for (SubItem subItem : item.getSubItems()) {
@@ -100,9 +100,16 @@ public class dataShare {
         }
 
         int lastSubItemOffset = item.getSubItems().get(item.getSubItems().size() - 1).getOffset();
+        SubItem lastSubItem = item.getSubItems().get(item.getSubItems().size() - 1);
 
         if (lastSubItemOffset == 0 || lastSubItemOffset == 1) {
-            item.setCount(1);
+            if (lastSubItem.getTypeSubItem() == TypeSubItem.BSTR) {
+                if (lastSubItem.getDataSize() % 2 != 0) {
+                    item.setCount(lastSubItem.getDataSize() / 2 + 1);
+                } else {
+                    item.setCount(lastSubItem.getDataSize() / 2);
+                }
+            } else item.setCount(1);
         } else {
             item.setCount(lastSubItemOffset / 2 + 1);
         }
