@@ -99,20 +99,12 @@ public class dataShare {
             subItem.setOffset(offset);
         }
 
-        if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset() == 0) {
-            if (item.getSubItems().get(item.getSubItems().size() - 1).getDataSize() % 2 != 0) {
-                item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getDataSize() / 2 + 1);
-            } else {
-                item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getDataSize() / 2);
-            }
-            return item;
-        }
+        int lastSubItemOffset = item.getSubItems().get(item.getSubItems().size() - 1).getOffset();
 
-
-        if (item.getSubItems().get(item.getSubItems().size() - 1).getOffset().doubleValue() % 2 != 0) {
-            item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2);
+        if (lastSubItemOffset == 0 || lastSubItemOffset == 1) {
+            item.setCount(1);
         } else {
-            item.setCount(item.getSubItems().get(item.getSubItems().size() - 1).getOffset() / 2 + 1);
+            item.setCount(lastSubItemOffset / 2 + 1);
         }
         return item;
     }
