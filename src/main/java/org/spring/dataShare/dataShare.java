@@ -344,14 +344,17 @@ public class dataShare {
         String domain = cellItem.lastIndexOf(".") == -1 ? cellItem : cellItem.substring(0, cellItem.lastIndexOf("."));
         String bit = cellItem.lastIndexOf(".") == -1 ? null : cellItem.substring(cellItem.lastIndexOf(".") + 1);
 
-        String variable = domain.replaceAll("[^A-Za-z]+", "");
-        if (variable.length() > 1) {
-            variable = domain.substring(0, 1);
+        StringBuilder variable = new StringBuilder();
+        for (int i = 0; i < domain.length(); i++) {
+            char s1 = domain.charAt(i);
+            if (Character.isDigit(s1))
+                break;
+            variable.append(s1);
         }
         String addressItem = domain.substring(variable.length());
 
         return Address.builder()
-                .variable(variable)
+                .variable(variable.toString())
                 .addressItem(addressItem)
                 .bit(bit)
                 .build();
