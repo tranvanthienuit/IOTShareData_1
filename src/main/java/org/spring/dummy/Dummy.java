@@ -22,6 +22,7 @@ public class Dummy {
         System.out.println("Input controller's name: ");
         String fileName = scanner.nextLine();
         List<Item> items = getModels(fileName).stream().filter(item -> item.getElement() != null).toList();
+        printController(fileName, items);
     }
 
     static void printController(String controllerName, List<Item> items) {
