@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Dummy {
     public static final int COLUMN_ITEM_NAME = 0;
     public static final int COLUMN_ITEM_VARIABLE_OPTION = 5;
-    public static final String PATH = "D:/set_up_IotDataSahre/project";
+    public static final String PATH = "D:/set_up_IotDataSahre/project/";
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
@@ -81,7 +81,9 @@ public class Dummy {
     }
 
     private static Integer getElement(String variableOption) {
-        return Integer.parseInt(variableOption.substring(variableOption.lastIndexOf("=") + 1, variableOption.lastIndexOf(",") - 1));
+        if (variableOption.equals(""))
+            return null;
+        return Integer.parseInt(variableOption.substring(variableOption.indexOf("=") + 1, variableOption.indexOf(",")));
     }
 
     private static Object getCellValue(Cell cell) {
