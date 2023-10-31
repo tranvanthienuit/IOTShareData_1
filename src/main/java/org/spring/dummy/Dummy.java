@@ -1,5 +1,6 @@
 package org.spring.dummy;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.spring.dummy.model.Item;
@@ -15,7 +16,7 @@ import java.util.Scanner;
 public class Dummy {
     public static final int COLUMN_ITEM_NAME = 0;
     public static final int COLUMN_ITEM_VARIABLE_OPTION = 5;
-    public static final String PATH = "D:/set_up_IotDataSahre/project/";
+    public static final String PATH = "D:/";
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
@@ -83,7 +84,8 @@ public class Dummy {
     private static Integer getElement(String variableOption) {
         if (variableOption.equals(""))
             return null;
-        return Integer.parseInt(variableOption.substring(variableOption.indexOf("=") + 1, variableOption.indexOf(",")));
+        String variableElement = StringUtils.substringAfter(variableOption, "Elem=");
+        return variableElement.lastIndexOf(",") == -1 ? Integer.parseInt(variableElement) : Integer.parseInt(variableElement.substring(0, variableElement.indexOf(",")));
     }
 
     private static Object getCellValue(Cell cell) {
