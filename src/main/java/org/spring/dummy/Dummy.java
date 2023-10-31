@@ -22,8 +22,15 @@ public class Dummy {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Input controller's name: ");
         String fileName = scanner.nextLine();
-        List<Item> items = getModels(fileName).stream().filter(item -> item.getElement() != null).toList();
-        printController(fileName, items);
+        List<Item> items = getModels(fileName);
+        List<Item> newItem = new ArrayList<>(items);
+        for (int i = 0; i < items.size(); i++) {
+            if (i + 1 < items.size() && items.get(i + 1).getElement() != null) {
+                newItem.remove(items.get(i));
+            }
+        }
+        newItem = newItem.stream().filter(item -> item.getElement() != null).toList();
+        printController(fileName, newItem);
     }
 
     static void printController(String controllerName, List<Item> items) {
