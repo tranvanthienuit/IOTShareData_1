@@ -1,10 +1,6 @@
 package org.spring.transmitter;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,11 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class transmitter {
     public static final int COLUMN_INDEX_TYPE = 0;
@@ -115,9 +107,7 @@ public class transmitter {
             } else {
                 String bitCharacter = modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1);
 
-                int bit = getBit(bitCharacter) == null ? Integer.parseInt(modelTransmitter.getAddress().substring(modelTransmitter.getAddress().lastIndexOf(".") + 1)) : getBit(bitCharacter);
-
-                subItem = modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" + bit;
+                subItem = modelTransmitter.getAddress().substring(0, modelTransmitter.getAddress().lastIndexOf(".")) + "-" + bitCharacter;
 
                 item = getParentItem(subItem, modelItems);
             }
