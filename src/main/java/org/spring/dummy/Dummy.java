@@ -1,5 +1,6 @@
 package org.spring.dummy;
 
+import org.apache.commons.compress.utils.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -8,15 +9,13 @@ import org.spring.dummy.model.Item;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Dummy {
     public static final int COLUMN_ITEM_NAME = 0;
     public static final int COLUMN_ITEM_VARIABLE_OPTION = 5;
     public static final String PATH = "D:/";
+    private static Set<String> separatorElement = Sets.newHashSet("ELEM=", "Elem=");
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
@@ -91,7 +90,8 @@ public class Dummy {
     private static Integer getElement(String variableOption) {
         if (variableOption.equals(""))
             return null;
-        String variableElement = StringUtils.substringAfter(variableOption, "Elem=");
+        String separator = separatorElement.stream().filter(variableOption::contains).findFirst().orElse("QQ éo có trong list String");
+        String variableElement = StringUtils.substringAfter(variableOption, separator);
         return variableElement.lastIndexOf(",") == -1 ? Integer.parseInt(variableElement) : Integer.parseInt(variableElement.substring(0, variableElement.indexOf(",")));
     }
 
