@@ -105,11 +105,7 @@ public class dataShare {
 
         if (lastSubItemOffset == 0 || lastSubItemOffset == 1) {
             if (lastSubItem.getTypeSubItem() == TypeSubItem.BSTR) {
-                if (lastSubItem.getDataSize() % 2 != 0) {
-                    item.setCount(lastSubItem.getDataSize() / 2 + 1);
-                } else {
-                    item.setCount(lastSubItem.getDataSize() / 2);
-                }
+                item.setCount(lastSubItem.getDataSize() / 2 + 1);
             } else item.setCount(1);
         } else {
             item.setCount(lastSubItemOffset / 2 + 1);
